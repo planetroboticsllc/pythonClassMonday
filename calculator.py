@@ -30,8 +30,70 @@ def C():
     currentText = "0"
     updateText()
 
+def Back():
+    global currentText
+    currentText = currentText[:len(currentText)-1]
+    updateText()
+
+def plus_minus():
+    global currentText
+    if currentText == "0":
+        return
+    if '-' in currentText:
+        currentText = currentText.replace('-', '')
+    else:
+        currentText = '-' + currentText
+
+    updateText()
+
+def performOperation():
+    global currentText
+    global num
+    global op
+
+    currentNum = float(currentText)
+
+    if op == '+':
+        result = num + currentNum
+        currentText = str(result)
+    elif op == '-':
+        result = num - currentNum
+        currentText = str(result)
+    elif op == 'X':
+        result = num * currentNum
+        currentText = str(result)
+    elif op == '/':
+        if currentNum == 0:
+            currentText = "0"
+        else:
+            result = num / currentNum
+            currentText = str(result)
+
+    num = float(currentText)
+    updateText()
+
+def operation(str):
+    global currentText
+    global num
+    global op
+
+    if op == "":
+        num = float(currentText)  # store current number
+        currentText = "0"
+    else:
+        performOperation()
+
+    if str != '=':
+        op = str  # store the current operation
+        currentText = "0"
+    else:
+        op = ""
+
 def updateText():
     global currentText
+    if len(currentText) == 0:
+        currentText = "0"
+
     if len(currentText) > 12:
         currentText = currentText[:12]
 
@@ -68,12 +130,12 @@ btnC.grid(row=0, column=1, padx=2, pady=2)
 
 btnBack = ctk.CTkButton(btnFrame, width=75, height=65, text="<--",
                       bg_color="white", fg_color="gray", anchor="center",
-                      font=ctk.CTkFont(size=30))
+                      font=ctk.CTkFont(size=30), command=Back)
 btnBack.grid(row=0, column=2, padx=2, pady=2)
 
 btnDivide = ctk.CTkButton(btnFrame, width=75, height=65, text="/",
                       bg_color="white", fg_color="gray", anchor="center",
-                      font=ctk.CTkFont(size=30))
+                      font=ctk.CTkFont(size=30), command=lambda : operation('/'))
 btnDivide.grid(row=0, column=3, padx=2, pady=2)
 
 # row = 1
@@ -94,7 +156,7 @@ btn9.grid(row=1, column=2, padx=2, pady=2)
 
 btnMultiply = ctk.CTkButton(btnFrame, width=75, height=65, text="X",
                       bg_color="white", fg_color="gray", anchor="center",
-                      font=ctk.CTkFont(size=30))
+                      font=ctk.CTkFont(size=30), command=lambda : operation('X'))
 btnMultiply.grid(row=1, column=3, padx=2, pady=2)
 
 # row = 2
@@ -115,7 +177,7 @@ btn6.grid(row=2, column=2, padx=2, pady=2)
 
 btnSubstract = ctk.CTkButton(btnFrame, width=75, height=65, text="-",
                       bg_color="white", fg_color="gray", anchor="center",
-                      font=ctk.CTkFont(size=30))
+                      font=ctk.CTkFont(size=30), command=lambda : operation('-'))
 btnSubstract.grid(row=2, column=3, padx=2, pady=2)
 
 # row = 3
@@ -136,13 +198,13 @@ btn3.grid(row=3, column=2, padx=2, pady=2)
 
 btnAddition = ctk.CTkButton(btnFrame, width=75, height=65, text="+",
                       bg_color="white", fg_color="gray", anchor="center",
-                      font=ctk.CTkFont(size=30))
+                      font=ctk.CTkFont(size=30), command=lambda : operation('+'))
 btnAddition.grid(row=3, column=3, padx=2, pady=2)
 
 # row = 4
 btnPlus_minus = ctk.CTkButton(btnFrame, width=75, height=65, text="+/-", text_color="black",
                       bg_color="white", fg_color="gray75", anchor="center",
-                      font=ctk.CTkFont(size=30))
+                      font=ctk.CTkFont(size=30), command=plus_minus)
 btnPlus_minus.grid(row=4, column=0, padx=2, pady=2)
 
 btn0 = ctk.CTkButton(btnFrame, width=75, height=65, text="0", text_color="black",
@@ -157,7 +219,7 @@ btnDot.grid(row=4, column=2, padx=2, pady=2)
 
 btnEqual = ctk.CTkButton(btnFrame, width=75, height=65, text="=",
                       bg_color="white", fg_color="gray", anchor="center",
-                      font=ctk.CTkFont(size=30))
+                      font=ctk.CTkFont(size=30), command=lambda : operation('='))
 btnEqual.grid(row=4, column=3, padx=2, pady=2)
 
 app.mainloop()
